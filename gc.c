@@ -17,7 +17,7 @@ typedef struct Object{
 
 
 /*@
-  // xsがobjを含むかどうか
+  // xs contains obj.
   inductive In(Object* obj, Node* xs) {
     case InEq:
       \forall Object* obj, Node* xs;
@@ -27,7 +27,7 @@ typedef struct Object{
       In(obj, xs->next) ==> In(obj, xs);
   }
 
-  // o1の子孫にo2がいるかどうか
+  // o1->next->next->...->next = o2
   inductive Reachable(Object* o1, Object* o2) {
     case Same:
       \forall Object* o;
@@ -36,18 +36,25 @@ typedef struct Object{
       \forall Object* o1, Object* o2, Object* o3;
       In(o3, o1->children) ==> Reachable(o3, o2) ==> Reachable(o1, o2);
   }
+
+  predicate MarksAll(Object* object, bool mark) = \forall Object* o; Reachable(object, o) ==> o->marked == mark;
  */
 
 void mark_phase(){
 }
 
 /*@
-  // 最初はobjectから辿れる要素は、マークされていない
   requires \valid(object);
-  requires \forall Object* o; Reachable(object, o) ==> o->marked == false;
 
-  // 子孫がすべてマークされる
-  ensures  \forall Object* o; Reachable(object, o) ==> o->marked == true;
+  behavior unmarked:
+    requires object->marked == false;
+    requires MarksAll(object, false);
+    ensures  MarksAll(object, true);
+
+  behavior already_marked:
+    requires object->marked == true;
+    requires MarksAll(object, true);
+    ensures  MarksAll(object, true);
  */
 void mark(Object* object){
   if(object->marked == false){

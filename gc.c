@@ -17,6 +17,7 @@ typedef struct Object{
 
 
 /*@
+  // xsがobjを含むかどうか
   inductive In(Object* obj, Node* xs) {
     case InEq:
       \forall Object* obj, Node* xs;
@@ -26,6 +27,7 @@ typedef struct Object{
       In(obj, xs->next) ==> In(obj, xs);
   }
 
+  // o1の子孫にo2がいるかどうか
   inductive Reachable(Object* o1, Object* o2) {
     case Same:
       \forall Object* o;
@@ -40,13 +42,17 @@ void mark_phase(){
 }
 
 /*@
+  // 最初はobjectから辿れる要素は、マークされていない
   requires \valid(object);
   requires (\forall Object* o; Reachable(object, o) ==> (o->marked == false));
 
+
+  // objectがマークされていないなら子孫もマークされない
   behavior unmark:
     requires (object->marked == false);
     ensures (\forall Object* o; Reachable(object, o) ==> (o->marked == false));
 
+  // objectがマークされているなら子孫もマークされる
   behavior mark:
    requires object->marked == true;
    ensures (\forall Object* o; Reachable(object, o) ==> (o->marked == true));

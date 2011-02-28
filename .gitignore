@@ -1,1 +1,7 @@
 *~
+.omakedb
+.omakedb.lock
+*.o
+*.jessie
+*.omc
+main

@@ -1,0 +1,28 @@
+########################################################################
+# C configuration.
+# Delete this section if you are not building C files.
+#
+
+################################################
+# Configuration.  You might want to modify any of these
+# configuration variables.
+#
+
+# CFLAGS +=
+# ASFLAGS +=
+# LDFLAGS +=
+# INCLUDES +=
+
+################################################
+# Uncomment the following section if you want
+# to build a C program in the current directory.
+#
+
+CFILES[] =
+	gc
+	main
+
+MAIN = main
+
+.DEFAULT: $(CProgram $(MAIN), $(CFILES))
+

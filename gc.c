@@ -40,9 +40,6 @@ typedef struct Object{
   predicate MarksAll(Object* object, bool mark) = \forall Object* o; Reachable(object, o) ==> o->marked == mark;
  */
 
-void mark_phase(){
-}
-
 /*@
   requires \valid(object);
 
@@ -61,12 +58,16 @@ void mark(Object* object){
     Node* node = object->children;
 
     object->marked = true;
+
+    /*@ loop invariant \valid(node); */
     while(node){
       mark(node->value);
       node = node->next;
     }
   }
 }
+
+void mark_phase(){}
 
 void sweep_phase(){}
 

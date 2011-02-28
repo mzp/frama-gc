@@ -44,18 +44,18 @@ void mark_phase(){
 /*@
   // 最初はobjectから辿れる要素は、マークされていない
   requires \valid(object);
-  requires (\forall Object* o; Reachable(object, o) ==> (o->marked == false));
+  requires \forall Object* o; Reachable(object, o) ==> o->marked == false;
 
 
   // objectがマークされていないなら子孫もマークされない
   behavior unmark:
-    requires (object->marked == false);
-    ensures (\forall Object* o; Reachable(object, o) ==> (o->marked == false));
+    requires object->marked == false;
+    ensures  \forall Object* o; Reachable(object, o) ==> o->marked == false;
 
   // objectがマークされているなら子孫もマークされる
   behavior mark:
    requires object->marked == true;
-   ensures (\forall Object* o; Reachable(object, o) ==> (o->marked == true));
+   ensures  \forall Object* o; Reachable(object, o) ==> o->marked == true;
  */
 void mark(Object* object){
   if(object->marked == false){

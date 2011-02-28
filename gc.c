@@ -32,9 +32,9 @@ typedef struct Object{
     case Same:
       \forall Object* o;
       Reachable(o,o);
-    case ChildrenLeft:
-      \forall Object* o1, Object* o2;
-      In(o2, o1->children) ==> Reachable(o1, o2);
+    case Children:
+      \forall Object* o1, Object* o2, Object* o3;
+      In(o3, o1->children) ==> Reachable(o3, o2) ==> Reachable(o1, o2);
   }
  */
 
@@ -46,25 +46,14 @@ void mark_phase(){
   requires \valid(object);
   requires \forall Object* o; Reachable(object, o) ==> o->marked == false;
 
-
-  // objectがマークされていないなら子孫もマークされない
-  behavior unmark:
-    requires object->marked == false;
-    ensures  \forall Object* o; Reachable(object, o) ==> o->marked == false;
-
-  // objectがマークされているなら子孫もマークされる
-  behavior mark:
-   requires object->marked == true;
-   ensures  \forall Object* o; Reachable(object, o) ==> o->marked == true;
+  // 子孫がすべてマークされる
+  ensures  \forall Object* o; Reachable(object, o) ==> o->marked == true;
  */
 void mark(Object* object){
   if(object->marked == false){
-    return;
-  }else{
     Node* node = object->children;
 
     object->marked = true;
-
     while(node){
       mark(node->value);
       node = node->next;

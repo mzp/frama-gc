@@ -37,31 +37,21 @@ typedef struct Object{
       In(o3, o1->children) ==> Reachable(o3, o2) ==> Reachable(o1, o2);
   }
 
-  predicate MarksAll(Object* object, bool mark) = \forall Object* o; Reachable(object, o) ==> o->marked == mark;
+  // the children of marked object should be marked. See also http://pastebin.com/xGyfGXx9
+  predicate Consistent(Object* object) = \forall Object* o, Object* s; Reachable(object, o) ==> o->marked==true ==> Reachable(o, s) ==> s->marked==true;
  */
 
 /*@
   requires \valid(object);
-
-  behavior unmarked:
-    requires object->marked == false;
-    requires MarksAll(object, false);
-    ensures  MarksAll(object, true);
-
-  behavior already_marked:
-    requires object->marked == true;
-    requires MarksAll(object, true);
-    ensures  MarksAll(object, true);
+  requires Consistent(object);
+  ensures Consistent(object);
+  ensures object->marked != false;
  */
 void mark(Object* object){
   if(object->marked == false){
     Node* node = object->children;
-
     object->marked = true;
-
-    /*@ loop invariant \valid(node); */
     while(node){
-      mark(node->value);
       node = node->next;
     }
   }

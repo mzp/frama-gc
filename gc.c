@@ -41,7 +41,10 @@ typedef struct Object{
     case VNil{L}:
       ValidNode(NULL);
     case VCons{L}:
-      \forall Node* node; \valid(node) && ValidNode(node->next) ==> ValidNode(node);
+      \forall Node* node;
+         \valid(node)        &&
+         \valid(node->value) &&
+	 ValidNode(node->value->children) ==> ValidNode{L}(node->next) ==> ValidNode(node);
   }
 
   // the children of marked object should be marked. See also http://pastebin.com/xGyfGXx9
@@ -57,15 +60,20 @@ typedef struct Object{
  */
 void mark(Object* object){
   if(object->marked == false){
-    Node* node = object->children;
-    object->marked = true;
 
-    /*@
-      loop invariant ValidNode(node);
-     */
+    Node* node = object->children;
+
+    /*@ loop invariant ValidNode(node); */
     while(node){
+      //@ assert \valid(node);
+      //@ assert \valid(node->value);
+      //@ assert ValidNode(node->value->children);
+      //@ assert Consistent(node->value);
+      mark(node->value);
       node = node->next;
     }
+
+    object->marked = true;
   }
 }
 

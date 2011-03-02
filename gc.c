@@ -1,7 +1,7 @@
-typedef int bool;
+typedef enum _bool { false = 0, true = 1 } bool ;
+
 #define NULL 0
-const bool true = 1;
-const bool false = 1;
+
 
 struct Object;
 

@@ -1,20 +1,4 @@
-typedef enum _bool { false = 0, true = 1 } bool ;
-
-#define NULL 0
-
-
-struct Object;
-
-typedef struct Node{
-  struct Object* value;
-  struct Node* next;
-} Node;
-
-typedef struct Object{
-  Node* children;
-  bool marked;
-} Object;
-
+#include "object.h"
 
 /*@
   // xs contains obj.
@@ -49,37 +33,31 @@ typedef struct Object{
 
   // the children of marked object should be marked. See also http://pastebin.com/xGyfGXx9
   predicate Consistent(Object* object) = \forall Object* o, Object* s; Reachable(object, o) ==> o->marked==true ==> Reachable(o, s) ==> s->marked==true;
+
+  predicate MarksAll(Object* object) = \forall Object* o, Object* s; Reachable(object, o) ==> o->marked==true;
  */
 
 /*@
   requires \valid(object);
   requires ValidNode(object->children);
   requires Consistent(object);
-  ensures Consistent(object);
-  ensures object->marked != false;
+
+  behavior marked:
+    assumes object->marked == true;
+    ensures Consistent(object);
+    ensures object->marked == true;
+
+  behavior unmarked:
+    assumes object->marked == false;
+    ensures object->marked == true;
+
+  disjoint behaviors;
  */
 void mark(Object* object){
   if(object->marked == false){
+    object->marked = true;
 
     Node* node = object->children;
 
-    /*@ loop invariant ValidNode(node); */
-    while(node){
-      //@ assert \valid(node);
-      //@ assert \valid(node->value);
-      //@ assert ValidNode(node->value->children);
-      //@ assert Consistent(node->value);
-      mark(node->value);
-      node = node->next;
-    }
-
-    object->marked = true;
   }
-}
-
-void mark_phase(){}
-
-void sweep_phase(){}
-
-void new_obj(int size){
 }

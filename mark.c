@@ -49,15 +49,21 @@
 
   behavior unmarked:
     assumes object->marked == false;
+    ensures MarksAll(object);
     ensures object->marked == true;
 
   disjoint behaviors;
  */
 void mark(Object* object){
-  if(object->marked == false){
+  if(object->marked != true){
+    //@ assert object->marked == false;
     object->marked = true;
 
     Node* node = object->children;
-
+    //@ loop invariant ValidNode(node);
+    while(node) {
+      mark(node->value);
+      node = node->next;
+    }
   }
 }

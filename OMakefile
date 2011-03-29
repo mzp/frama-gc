@@ -19,7 +19,7 @@
 #
 
 CFILES[] =
-	gc
+	mark
 	main
 
 MAIN = main

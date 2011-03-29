@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "object.h"
 
 /*@
@@ -42,6 +43,7 @@
   requires ValidNode(object->children);
   requires Consistent(object);
 
+
   behavior marked:
     assumes object->marked == true;
     ensures Consistent(object);
@@ -49,19 +51,21 @@
 
   behavior unmarked:
     assumes object->marked == false;
+    ensures &(object->marked) == \old(&object->marked);
     ensures MarksAll(object);
     ensures object->marked == true;
 
   disjoint behaviors;
  */
 void mark(Object* object){
-  if(object->marked != true){
+  printf("%d\n", object->marked);
+  if(object->marked == false){
     //@ assert object->marked == false;
     object->marked = true;
 
     Node* node = object->children;
     //@ loop invariant ValidNode(node);
-    while(node) {
+    while( node ) {
       mark(node->value);
       node = node->next;
     }

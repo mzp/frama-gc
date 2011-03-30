@@ -1,6 +1,6 @@
 #include "object.h"
 /*@
-  inductive Reachable(Object* o1, Object* o2) {
+  inductive Reachable{L}(Object* o1, Object* o2) {
     case Same:
       \forall Object* o;
       Reachable(o,o);
@@ -10,9 +10,11 @@
   }
 
   // the children of marked object should be marked. See also http://pastebin.com/xGyfGXx9
-  predicate Consistent(Object* object) = \forall Object* o, Object* s; Reachable(object, o) ==> o->marked==true ==> Reachable(o, s) ==> s->marked==true;
+  predicate MarksAll{L}(Object* object) = \forall Object* o, Object* s; Reachable(object, o) ==> o->marked==true;
 
-  predicate MarksAll(Object* object) = \forall Object* o, Object* s; Reachable(object, o) ==> o->marked==true;
+  predicate Consistent{L}(Object* object) = \forall Object* o, Object* s; Reachable(object, o) ==> o->marked==true ==> MarksAll(o);
+
+
  */
 
 /*@

@@ -10,14 +10,11 @@ typedef enum _bool { false = 0, true = 1 } bool ;
 
 struct Object;
 
-typedef struct Node{
-  struct Object* value;
-  struct Node* next;
-} Node;
 
 typedef struct Object{
-  Node* children;
   bool marked;
+  unsigned int size;
+  struct Object* children;
 } Object;
 
 #endif

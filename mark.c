@@ -1,6 +1,5 @@
 #include "object.h"
-
-/*@
+/*
   // xs contains obj.
   inductive In(Object* obj, Node* xs) {
     case InEq:
@@ -37,33 +36,30 @@
   predicate MarksAll(Object* object) = \forall Object* o, Object* s; Reachable(object, o) ==> o->marked==true;
  */
 
-/*@
+/*
   requires \valid(object);
   requires ValidNode(object->children);
   requires Consistent(object);
-  ensures Consistent(object);
-  ensures object->marked == true;
-  ensures object == \old(object);
 
   behavior marked:
     assumes object->marked == true;
+    ensures MarksAll(object);
+    ensures object->marked == true;
 
   behavior unmarked:
     assumes object->marked == false;
     ensures MarksAll(object);
+    ensures object->marked == true;
 
   disjoint behaviors;
  */
 void mark(Object* object){
   if(object->marked == false){
-    //@ assert object->marked == false;
+    int i = 0;
     object->marked = true;
 
-    Node* node = object->children;
-    //@ loop invariant ValidNode(node) && object->marked == true;
-    while( node ) {
-      mark(node->value);
-      node = node->next;
+    for(i = 0; i < object->size; i++){
+      mark(object->children+i);
     }
   }
 }

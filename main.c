@@ -4,40 +4,36 @@
 int main(){
   // a -> b -> d
   //      c -> e
-  Object a,b,c,d,e;
-  Node   a_1, a_2, b_1, c_1;
+  Object a;
+  Object ac[2];
+  Object bc[1];
+  Object cc[1];
 
   a.marked = false;
-  a.children = &a_1;
-  a_1.value = &b;
-  a_1.next = &a_2;
-  a_2.value = &c;
-  a_2.next = 0;
+  a.children = ac;
+  a.size = 2;
 
-  b.marked = false;
-  b.children = &b_1;
-  b_1.value = &d;
-  b_1.next = 0;
+  ac[0].marked = false;
+  ac[0].children = bc;
+  ac[0].size = 1;
 
-  c.marked = false;
-  c.children = &c_1;
-  c_1.value  = &e;
-  c_1.next = 0;
+  ac[1].marked = false;
+  ac[1].children = cc;
+  ac[1].size = 1;
 
-  d.marked = false;
-  d.children = 0;
+  bc[0].marked = false;
+  bc[0].size = 0;
 
-  e.marked = false;
-  e.children = 0;
+  cc[0].marked = false;
+  cc[0].size = 0;
 
-  mark(&b);
+  mark(&a);
 
   printf("a:%d b:%d c:%d d:%d e:%d\n",
 	 a.marked,
-	 b.marked,
-	 c.marked,
-	 d.marked,
-	 e.marked);
-
+	 ac[0].marked,
+	 ac[1].marked,
+	 bc[0].marked,
+	 cc[0].marked);
 }
 

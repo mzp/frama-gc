@@ -41,31 +41,30 @@
   requires \valid(object);
   requires ValidNode(object->children);
   requires Consistent(object);
-
+  ensures Consistent(object);
+  ensures object->marked == true;
+  ensures object == \old(object);
 
   behavior marked:
     assumes object->marked == true;
-    ensures Consistent(object);
-    ensures object->marked == true;
 
   behavior unmarked:
     assumes object->marked == false;
     ensures MarksAll(object);
-    ensures \old(object)->marked == true;
 
   disjoint behaviors;
  */
 void mark(Object* object){
-  printf("%d\n", object->marked);
   if(object->marked == false){
     //@ assert object->marked == false;
     object->marked = true;
 
     Node* node = object->children;
-    //@ loop invariant ValidNode(node);
+    //@ loop invariant ValidNode(node) && object->marked == true;
     while( node ) {
       mark(node->value);
       node = node->next;
     }
   }
 }
+

@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include "object.h"
 
 /*@
@@ -51,9 +50,8 @@
 
   behavior unmarked:
     assumes object->marked == false;
-    ensures &(object->marked) == \old(&object->marked);
     ensures MarksAll(object);
-    ensures object->marked == true;
+    ensures \old(object)->marked == true;
 
   disjoint behaviors;
  */
